@@ -48,9 +48,10 @@ Debugging - To test it in a new urxvt:
 sub on_start {
 	my($self) = @_;
 
-	# SET TO false BELOW IF YOU WANT MANUAL MODE INSTEAD OF AUTOMATIC:
+	# SET TO true BELOW IF YOU WANT TO AUTOMATICALLY SPEAK SELECTION
+	# (you can always activate that option using Ctrl+middle button in urxvt)
 	# --------------------------------------------------------------------
-	$self->{enable_auto_espeak_on_select} = true;
+	$self->{enable_auto_espeak_on_select} = false;
 	# --------------------------------------------------------------------
 
 	# Add an option Automatic espeak item and binding in Ctrl+middle click menu
