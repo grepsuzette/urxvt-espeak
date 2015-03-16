@@ -10,10 +10,10 @@ espeak - Perl ext. for urxvt to send selection to espeak (a text-to-speech tool)
 =head1 DESCRIPTION
 
 If you use the urxvt terminal and your system has the espeak command,
-this perl extension will allow you to speak selection. 
+this perl extension can speak the selection automatically or manually. 
 
-It can be either automatically played on select, or activated manually using 
-the CTRL+Right click menu of urxvt (through item "Espeak selection"). 
+To play manually you will simply have to 
+use the CTRL+Right click menu of urxvt and choose item "Espeak selection". 
 
 =head1 PREREQUISITES
 
@@ -28,11 +28,13 @@ the CTRL+Right click menu of urxvt (through item "Espeak selection").
 
     URxvt.perl-ext:           default,espeak
 
-(optional) If you do not wish to have selection automatically speaked on selection, change the variable below to false (look for the text SET TO false BELOW IF (..), and set it to false instead of true, in that case you will have to use the menu).
+(optional) If you do not wish to have selection automatically speaked on selection, 
+change the variable below to false (look for the text SET TO false BELOW IF (..), 
+and set it to false instead of true, in that case you will have to use the menu).
 
 =head1 TAGS
 
-URxvt, espeak, visual impairment, text-to-speech, console, terminal, select, 
+URxvt, espeak, visual impairment, text-to-speech, console, terminal, 
 selection
 
 =back
@@ -46,8 +48,10 @@ Debugging - To test it in a new urxvt:
 sub on_start {
 	my($self) = @_;
 
-	# SET TO false BELOW IF YOU WISH TO NOT HAVE AUTO-ESPEAK ON SELECT:
+	# SET TO false BELOW IF YOU WANT MANUAL MODE INSTEAD OF AUTOMATIC:
+	# --------------------------------------------------------------------
 	$self->{enable_auto_espeak_on_select} = true;
+	# --------------------------------------------------------------------
 
 	# Add an option Automatic espeak item and binding in Ctrl+middle click menu
 	push @{ $self->{term}{option_popup_hook} }, sub {(
