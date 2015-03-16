@@ -1,0 +1,79 @@
+#! perl
+
+# Author: Alex van 't Westende <emu <-JOINTHESE6CHARS-> gel@qq.com>
+# Date: 16-03-2015
+
+=head1 NAME
+
+espeak - Perl ext. for urxvt to send selection to espeak (a text-to-speech tool) 
+
+=head1 DESCRIPTION
+
+If you use the urxvt terminal and your system has the espeak command,
+this perl extension will allow you to speak selection. 
+
+It can be either automatically played on select, or activated manually using 
+the CTRL+Right click menu of urxvt (through item "Espeak selection"). 
+
+=head1 PREREQUISITES
+
+- Urxvt
+- espeak
+- Perl
+
+=head1 HOW TO INSTALL AND LOAD
+
+1. Copy this file to your urxvt perl directory, e.g. in $HOME/.urvxt/perl/
+2. Add this to your urxvt resource file, e.g. in .Xresources:
+
+    URxvt.perl-ext:           default,espeak
+
+(optional) If you do not wish to have selection automatically speaked on selection, change the variable below to false (look for the text SET TO false BELOW IF (..), and set it to false instead of true, in that case you will have to use the menu).
+
+=head1 TAGS
+
+URxvt, espeak, visual impairment, text-to-speech, console, terminal, select, 
+selection
+
+=back
+
+Debugging - To test it in a new urxvt:
+
+    urxvt --perl-lib $HOME -pe espeak
+
+=cut
+
+sub on_start {
+	my($self) = @_;
+
+	# SET TO false BELOW IF YOU WISH TO NOT HAVE AUTO-ESPEAK ON SELECT:
+	$self->{enable_auto_espeak_on_select} = true;
+
+	# Add an option Automatic espeak item and binding in Ctrl+middle click menu
+	push @{ $self->{term}{option_popup_hook} }, sub {(
+		"Automatic espeak" => $self->{enable_auto_espeak_on_select}, sub {
+			$self->{enable_auto_espeak_on_select} = $_[0] 
+		}
+	)};
+	
+}
+
+sub on_sel_grab {
+	my($self) = @_;
+
+	# If auto espeak is set (ctrl+middle button to toggle that option)
+	if ($self->{enable_auto_espeak_on_select}) {
+		system ("killall espeak");
+		system ("espeak \"".$self->selection."\" 2>&1 >/dev/null &");
+	}
+
+	# In any case, add a popup menu entry when ctrl+right click
+	push @{ $self->{term}{selection_popup_hook} }, sub {
+		"espeak selection" => sub {
+			system ("killall espeak");
+			system ("espeak \"".$self->selection."\" 2>&1 >/dev/null &");
+			()
+		}
+	}
+}
+
